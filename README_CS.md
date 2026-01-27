@@ -8,7 +8,7 @@
 
 Vlastní integrace pro Home Assistant, která vám připomíná ověření a bezpečné uložení šifrovacího klíče zálohy. Už nikdy nepřijdete o přístup ke svým zálohám!
 
-![Ukázka oznámení](images/notification_cs.png)
+<img width="453" height="345" alt="Ukázka oznámení" src="https://github.com/user-attachments/assets/28fbe67f-dd3b-4769-8ac3-d940d6c65a59" />
 
 ## Proč tato integrace?
 
