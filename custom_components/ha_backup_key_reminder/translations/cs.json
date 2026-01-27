@@ -8,12 +8,18 @@
         "data": {
           "frequency": "Frekvence připomínky",
           "custom_days": "Vlastní interval (dny)",
-          "notify_on_update": "Upozornit při aktualizaci Home Assistant"
+          "notification_time": "Čas oznámení",
+          "notify_on_update": "Upozornit při aktualizaci Home Assistant",
+          "followup_enabled": "Povolit opakovanou připomínku",
+          "followup_delay": "Zpoždění opakované připomínky (minuty)"
         },
         "data_description": {
           "frequency": "Jak často chcete být upozorněni?",
           "custom_days": "Použije se pouze při výběru 'Vlastní'",
-          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant"
+          "notification_time": "V kolik hodin odeslat připomínku",
+          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant",
+          "followup_enabled": "Odeslat druhou připomínku po stanoveném čase",
+          "followup_delay": "Počet minut před odesláním opakované připomínky"
         }
       },
       "notifications": {
@@ -54,12 +60,18 @@
         "data": {
           "frequency": "Frekvence připomínky",
           "custom_days": "Vlastní interval (dny)",
-          "notify_on_update": "Upozornit při aktualizaci Home Assistant"
+          "notification_time": "Čas oznámení",
+          "notify_on_update": "Upozornit při aktualizaci Home Assistant",
+          "followup_enabled": "Povolit opakovanou připomínku",
+          "followup_delay": "Zpoždění opakované připomínky (minuty)"
         },
         "data_description": {
           "frequency": "Jak často chcete být upozorněni?",
           "custom_days": "Použije se pouze při výběru 'Vlastní'",
-          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant"
+          "notification_time": "V kolik hodin odeslat připomínku",
+          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant",
+          "followup_enabled": "Odeslat druhou připomínku po stanoveném čase",
+          "followup_delay": "Počet minut před odesláním opakované připomínky"
         }
       },
       "notifications": {

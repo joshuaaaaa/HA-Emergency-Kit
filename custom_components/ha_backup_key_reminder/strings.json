@@ -8,12 +8,18 @@
         "data": {
           "frequency": "Reminder frequency",
           "custom_days": "Custom interval (days)",
-          "notify_on_update": "Notify on Home Assistant update"
+          "notification_time": "Notification time",
+          "notify_on_update": "Notify on Home Assistant update",
+          "followup_enabled": "Enable follow-up reminder",
+          "followup_delay": "Follow-up delay (minutes)"
         },
         "data_description": {
           "frequency": "How often should you be reminded?",
           "custom_days": "Only used when 'Custom' frequency is selected",
-          "notify_on_update": "Send reminder when Home Assistant version changes"
+          "notification_time": "Time of day to send reminders",
+          "notify_on_update": "Send reminder when Home Assistant version changes",
+          "followup_enabled": "Send a second reminder after specified delay",
+          "followup_delay": "Minutes to wait before sending follow-up reminder"
         }
       },
       "notifications": {
@@ -54,12 +60,18 @@
         "data": {
           "frequency": "Reminder frequency",
           "custom_days": "Custom interval (days)",
-          "notify_on_update": "Notify on Home Assistant update"
+          "notification_time": "Notification time",
+          "notify_on_update": "Notify on Home Assistant update",
+          "followup_enabled": "Enable follow-up reminder",
+          "followup_delay": "Follow-up delay (minutes)"
         },
         "data_description": {
           "frequency": "How often should you be reminded?",
           "custom_days": "Only used when 'Custom' frequency is selected",
-          "notify_on_update": "Send reminder when Home Assistant version changes"
+          "notification_time": "Time of day to send reminders",
+          "notify_on_update": "Send reminder when Home Assistant version changes",
+          "followup_enabled": "Send a second reminder after specified delay",
+          "followup_delay": "Minutes to wait before sending follow-up reminder"
         }
       },
       "notifications": {

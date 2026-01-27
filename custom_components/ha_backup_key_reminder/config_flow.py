@@ -21,6 +21,8 @@ from homeassistant.helpers.selector import (
     TextSelectorConfig,
     TextSelectorType,
     BooleanSelector,
+    TimeSelector,
+    TimeSelectorConfig,
 )
 
 from .const import (
@@ -32,6 +34,9 @@ from .const import (
     CONF_CUSTOM_MESSAGE,
     CONF_NOTIFY_ON_UPDATE,
     CONF_NOTIFY_SERVICES,
+    CONF_NOTIFICATION_TIME,
+    CONF_FOLLOWUP_ENABLED,
+    CONF_FOLLOWUP_DELAY,
     FREQUENCY_OPTIONS,
     FREQUENCY_CUSTOM,
     NOTIFICATION_METHODS,
@@ -41,6 +46,9 @@ from .const import (
     DEFAULT_CUSTOM_DAYS,
     DEFAULT_MESSAGE_TYPE,
     DEFAULT_NOTIFY_ON_UPDATE,
+    DEFAULT_NOTIFICATION_TIME,
+    DEFAULT_FOLLOWUP_ENABLED,
+    DEFAULT_FOLLOWUP_DELAY,
     NOTIFY_PERSISTENT,
 )
 
@@ -108,8 +116,25 @@ class BackupKeyReminderConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                 ),
                 vol.Required(
+                    CONF_NOTIFICATION_TIME, default=DEFAULT_NOTIFICATION_TIME
+                ): TimeSelector(TimeSelectorConfig()),
+                vol.Required(
                     CONF_NOTIFY_ON_UPDATE, default=DEFAULT_NOTIFY_ON_UPDATE
                 ): BooleanSelector(),
+                vol.Required(
+                    CONF_FOLLOWUP_ENABLED, default=DEFAULT_FOLLOWUP_ENABLED
+                ): BooleanSelector(),
+                vol.Optional(
+                    CONF_FOLLOWUP_DELAY, default=DEFAULT_FOLLOWUP_DELAY
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=5,
+                        max=120,
+                        step=5,
+                        mode=NumberSelectorMode.BOX,
+                        unit_of_measurement="min",
+                    )
+                ),
             }
         )
 
@@ -241,8 +266,17 @@ class BackupKeyReminderOptionsFlow(config_entries.OptionsFlow):
 
         current_frequency = self._data.get(CONF_FREQUENCY, DEFAULT_FREQUENCY)
         current_custom_days = self._data.get(CONF_CUSTOM_DAYS, DEFAULT_CUSTOM_DAYS)
+        current_notification_time = self._data.get(
+            CONF_NOTIFICATION_TIME, DEFAULT_NOTIFICATION_TIME
+        )
         current_notify_on_update = self._data.get(
             CONF_NOTIFY_ON_UPDATE, DEFAULT_NOTIFY_ON_UPDATE
+        )
+        current_followup_enabled = self._data.get(
+            CONF_FOLLOWUP_ENABLED, DEFAULT_FOLLOWUP_ENABLED
+        )
+        current_followup_delay = self._data.get(
+            CONF_FOLLOWUP_DELAY, DEFAULT_FOLLOWUP_DELAY
         )
 
         data_schema = vol.Schema(
@@ -270,8 +304,25 @@ class BackupKeyReminderOptionsFlow(config_entries.OptionsFlow):
                     )
                 ),
                 vol.Required(
+                    CONF_NOTIFICATION_TIME, default=current_notification_time
+                ): TimeSelector(TimeSelectorConfig()),
+                vol.Required(
                     CONF_NOTIFY_ON_UPDATE, default=current_notify_on_update
                 ): BooleanSelector(),
+                vol.Required(
+                    CONF_FOLLOWUP_ENABLED, default=current_followup_enabled
+                ): BooleanSelector(),
+                vol.Optional(
+                    CONF_FOLLOWUP_DELAY, default=current_followup_delay
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=5,
+                        max=120,
+                        step=5,
+                        mode=NumberSelectorMode.BOX,
+                        unit_of_measurement="min",
+                    )
+                ),
             }
         )
 

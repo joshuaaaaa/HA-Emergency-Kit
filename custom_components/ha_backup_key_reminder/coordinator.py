@@ -24,6 +24,9 @@ from .const import (
     CONF_MESSAGE_TYPE,
     CONF_CUSTOM_MESSAGE,
     CONF_NOTIFY_ON_UPDATE,
+    CONF_NOTIFICATION_TIME,
+    CONF_FOLLOWUP_ENABLED,
+    CONF_FOLLOWUP_DELAY,
     FREQUENCY_OPTIONS,
     FREQUENCY_CUSTOM,
     NOTIFY_PERSISTENT,
@@ -37,6 +40,9 @@ from .const import (
     DEFAULT_FREQUENCY,
     DEFAULT_CUSTOM_DAYS,
     DEFAULT_MESSAGE_TYPE,
+    DEFAULT_NOTIFICATION_TIME,
+    DEFAULT_FOLLOWUP_ENABLED,
+    DEFAULT_FOLLOWUP_DELAY,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -63,6 +69,7 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
         self.store = store
         self._stored_data = stored_data
         self._unsub_timer: callable | None = None
+        self._unsub_followup: callable | None = None
         self._last_notified: datetime | None = None
         self._notification_count: int = 0
         self._ha_version_at_last_notification: str | None = None
@@ -120,13 +127,36 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
 
         return FREQUENCY_OPTIONS.get(frequency, 30)
 
+    def _get_notification_time(self) -> tuple[int, int]:
+        """Get configured notification time (hour, minute)."""
+        options = self.entry.options
+        time_str = options.get(CONF_NOTIFICATION_TIME, DEFAULT_NOTIFICATION_TIME)
+        try:
+            if isinstance(time_str, dict):
+                # TimeSelector returns dict with hours/minutes
+                return time_str.get("hours", 9), time_str.get("minutes", 0)
+            elif isinstance(time_str, str):
+                parts = time_str.split(":")
+                return int(parts[0]), int(parts[1]) if len(parts) > 1 else 0
+        except (ValueError, IndexError):
+            pass
+        return 9, 0  # Default to 9:00
+
     def _calculate_next_notification(self) -> datetime | None:
         """Calculate the next notification datetime."""
         if not self._last_notified:
-            return dt_util.now()
+            # First run - schedule for configured time today or tomorrow
+            now = dt_util.now()
+            hour, minute = self._get_notification_time()
+            next_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            if next_time <= now:
+                next_time += timedelta(days=1)
+            return next_time
 
         frequency_days = self._get_frequency_days()
-        return self._last_notified + timedelta(days=frequency_days)
+        hour, minute = self._get_notification_time()
+        next_date = self._last_notified + timedelta(days=frequency_days)
+        return next_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
 
     def _calculate_days_until_next(self) -> int:
         """Calculate days until next notification."""
@@ -193,9 +223,9 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
             f"{base_message}"
         )
 
-    async def send_reminder(self, force: bool = False) -> None:
+    async def send_reminder(self, force: bool = False, is_followup: bool = False) -> None:
         """Send the reminder notification."""
-        if not force:
+        if not force and not is_followup:
             next_notification = self._calculate_next_notification()
             now = dt_util.now()
             if next_notification and next_notification > now:
@@ -210,17 +240,61 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
             CONF_NOTIFICATION_METHODS, [NOTIFY_PERSISTENT]
         )
 
+        # Add follow-up indicator to message if this is a follow-up
+        if is_followup:
+            lang = self._get_language()
+            if lang.startswith("cs"):
+                message = f"[OPAKOVANÁ PŘIPOMÍNKA]\n\n{message}"
+            else:
+                message = f"[FOLLOW-UP REMINDER]\n\n{message}"
+
         for method in notification_methods:
             await self._send_notification(method, message)
 
-        # Update tracking data
-        self._last_notified = dt_util.now()
-        self._notification_count += 1
-        self._ha_version_at_last_notification = HA_VERSION
-        await self._async_save_data()
-        await self.async_refresh()
+        # Only update tracking data for first notification, not follow-up
+        if not is_followup:
+            self._last_notified = dt_util.now()
+            self._notification_count += 1
+            self._ha_version_at_last_notification = HA_VERSION
+            await self._async_save_data()
+            await self.async_refresh()
 
-        _LOGGER.info("Backup key reminder sent via %s", notification_methods)
+            # Schedule follow-up if enabled
+            await self._schedule_followup()
+
+        _LOGGER.info(
+            "Backup key reminder %s sent via %s",
+            "(follow-up)" if is_followup else "",
+            notification_methods,
+        )
+
+    async def _schedule_followup(self) -> None:
+        """Schedule follow-up notification if enabled."""
+        options = self.entry.options
+        followup_enabled = options.get(CONF_FOLLOWUP_ENABLED, DEFAULT_FOLLOWUP_ENABLED)
+
+        if not followup_enabled:
+            return
+
+        # Cancel any existing follow-up
+        if self._unsub_followup:
+            self._unsub_followup()
+            self._unsub_followup = None
+
+        followup_delay = options.get(CONF_FOLLOWUP_DELAY, DEFAULT_FOLLOWUP_DELAY)
+        _LOGGER.debug("Scheduling follow-up reminder in %d minutes", followup_delay)
+
+        @callback
+        def _async_followup_callback(_now: datetime) -> None:
+            """Handle follow-up notification."""
+            self._unsub_followup = None
+            self.hass.async_create_task(self.send_reminder(force=True, is_followup=True))
+
+        self._unsub_followup = async_call_later(
+            self.hass,
+            timedelta(minutes=followup_delay),
+            _async_followup_callback,
+        )
 
     async def _send_notification(self, method: str, message: str) -> None:
         """Send notification via specified method."""
@@ -252,6 +326,18 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
     async def check_and_send_reminder(self) -> None:
         """Check if reminder should be sent and send it."""
         await self.send_reminder(force=False)
+
+    async def _check_and_send_if_time(self) -> None:
+        """Check if it's time to send reminder based on configured time."""
+        next_notification = self._calculate_next_notification()
+        if not next_notification:
+            return
+
+        now = dt_util.now()
+        # Check if we're within 15 minutes of the scheduled time
+        time_diff = (now - next_notification).total_seconds()
+        if 0 <= time_diff <= 900:  # Within 15 minutes after scheduled time
+            await self.send_reminder(force=False)
 
     async def check_ha_version_change(self) -> None:
         """Check if HA version has changed and send notification."""
@@ -305,23 +391,26 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
         if self._unsub_timer:
             self._unsub_timer()
 
-        # Check every hour
+        # Check every 15 minutes for more accurate time-based notifications
         self._unsub_timer = async_track_time_interval(
             self.hass,
             self._async_scheduled_check,
-            timedelta(hours=1),
+            timedelta(minutes=15),
         )
 
     @callback
     def _async_scheduled_check(self, now: datetime) -> None:
         """Handle scheduled check."""
-        self.hass.async_create_task(self.check_and_send_reminder())
+        self.hass.async_create_task(self._check_and_send_if_time())
 
     async def async_shutdown(self) -> None:
         """Shutdown the coordinator."""
         if self._unsub_timer:
             self._unsub_timer()
             self._unsub_timer = None
+        if self._unsub_followup:
+            self._unsub_followup()
+            self._unsub_followup = None
 
     @property
     def last_notified(self) -> datetime | None:

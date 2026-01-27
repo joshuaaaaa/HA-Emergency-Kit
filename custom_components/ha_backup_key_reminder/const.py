@@ -11,6 +11,9 @@ CONF_MESSAGE_TYPE: Final = "message_type"
 CONF_CUSTOM_MESSAGE: Final = "custom_message"
 CONF_NOTIFY_ON_UPDATE: Final = "notify_on_update"
 CONF_NOTIFY_SERVICES: Final = "notify_services"
+CONF_NOTIFICATION_TIME: Final = "notification_time"
+CONF_FOLLOWUP_ENABLED: Final = "followup_enabled"
+CONF_FOLLOWUP_DELAY: Final = "followup_delay"
 
 # Frequency options (in days)
 FREQUENCY_WEEK: Final = 7
@@ -153,3 +156,6 @@ DEFAULT_FREQUENCY: Final = "month"
 DEFAULT_CUSTOM_DAYS: Final = 30
 DEFAULT_MESSAGE_TYPE: Final = MESSAGE_TEMPLATE_SIMPLE
 DEFAULT_NOTIFY_ON_UPDATE: Final = True
+DEFAULT_NOTIFICATION_TIME: Final = "09:00"
+DEFAULT_FOLLOWUP_ENABLED: Final = False
+DEFAULT_FOLLOWUP_DELAY: Final = 30  # minutes
