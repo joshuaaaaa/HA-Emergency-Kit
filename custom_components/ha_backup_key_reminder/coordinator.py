@@ -141,8 +141,27 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
         delta = next_notification - now
         return max(0, delta.days)
 
+    def _get_language(self) -> str:
+        """Get the current HA language."""
+        return self.hass.config.language or "en"
+
+    def _get_messages_for_language(self) -> dict[str, str]:
+        """Get message templates for current language."""
+        lang = self._get_language()
+        if lang.startswith("cs"):
+            return DEFAULT_MESSAGES_CS
+        # Default to English for all other languages
+        return DEFAULT_MESSAGES_EN
+
+    def _get_title(self) -> str:
+        """Get localized notification title."""
+        lang = self._get_language()
+        if lang.startswith("cs"):
+            return "Připomínka šifrovacího klíče"
+        return "Backup Key Reminder"
+
     def _get_message(self) -> str:
-        """Get the notification message based on configuration."""
+        """Get the notification message based on configuration and language."""
         options = self.entry.options
         message_type = options.get(CONF_MESSAGE_TYPE, DEFAULT_MESSAGE_TYPE)
 
@@ -151,8 +170,28 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
             if custom_message:
                 return custom_message
 
-        # Use default messages (English for now, could be extended for localization)
-        return DEFAULT_MESSAGES_EN.get(message_type, DEFAULT_MESSAGES_EN["static"])
+        # Use messages based on HA language setting
+        messages = self._get_messages_for_language()
+        return messages.get(message_type, messages["static"])
+
+    def _get_version_update_message(self) -> str:
+        """Get localized version update message."""
+        lang = self._get_language()
+        base_message = self._get_message()
+
+        if lang.startswith("cs"):
+            return (
+                f"Home Assistant byl aktualizován z verze "
+                f"{self._ha_version_at_last_notification} na {HA_VERSION}.\n\n"
+                f"Toto je vhodný čas ověřit váš šifrovací klíč zálohy!\n\n"
+                f"{base_message}"
+            )
+        return (
+            f"Home Assistant has been updated from "
+            f"{self._ha_version_at_last_notification} to {HA_VERSION}.\n\n"
+            f"This is a good time to verify your backup encryption key!\n\n"
+            f"{base_message}"
+        )
 
     async def send_reminder(self, force: bool = False) -> None:
         """Send the reminder notification."""
@@ -185,7 +224,7 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
 
     async def _send_notification(self, method: str, message: str) -> None:
         """Send notification via specified method."""
-        title = "Backup Key Reminder"
+        title = self._get_title()
 
         if method == NOTIFY_PERSISTENT:
             async_create_notification(
@@ -229,12 +268,7 @@ class BackupKeyReminderCoordinator(DataUpdateCoordinator):
                 self._ha_version_at_last_notification,
                 HA_VERSION,
             )
-            version_message = (
-                f"Home Assistant has been updated from "
-                f"{self._ha_version_at_last_notification} to {HA_VERSION}.\n\n"
-                f"This is a good time to verify your backup encryption key!\n\n"
-                f"{self._get_message()}"
-            )
+            version_message = self._get_version_update_message()
             notification_methods = options.get(
                 CONF_NOTIFICATION_METHODS, [NOTIFY_PERSISTENT]
             )
