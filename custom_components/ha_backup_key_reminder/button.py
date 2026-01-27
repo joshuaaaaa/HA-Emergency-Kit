@@ -42,6 +42,7 @@ class BackupKeyReminderButtonBase(ButtonEntity):
         self._entry = entry
         self._button_type = button_type
         self._attr_unique_id = f"{entry.entry_id}_{button_type}"
+        self._attr_translation_key = button_type
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
             "name": "Backup Key Reminder",
@@ -62,14 +63,6 @@ class SendReminderButton(BackupKeyReminderButtonBase):
         """Initialize the button."""
         super().__init__(coordinator, entry, "send_reminder_now")
 
-    @property
-    def name(self) -> str:
-        """Return the name of the button."""
-        lang = self.coordinator.hass.config.language or "en"
-        if lang.startswith("cs"):
-            return "Odeslat připomínku nyní"
-        return "Send Reminder Now"
-
     async def async_press(self) -> None:
         """Handle the button press."""
         await self.coordinator.send_reminder(force=True)
@@ -85,14 +78,6 @@ class MarkKeyVerifiedButton(BackupKeyReminderButtonBase):
     ) -> None:
         """Initialize the button."""
         super().__init__(coordinator, entry, "mark_key_verified")
-
-    @property
-    def name(self) -> str:
-        """Return the name of the button."""
-        lang = self.coordinator.hass.config.language or "en"
-        if lang.startswith("cs"):
-            return "Označit klíč jako ověřený"
-        return "Mark Key Verified"
 
     async def async_press(self) -> None:
         """Handle the button press."""

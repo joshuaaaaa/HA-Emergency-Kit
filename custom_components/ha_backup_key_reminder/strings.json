@@ -136,6 +136,14 @@
       "ha_version": {
         "name": "HA Version at Last Notification"
       }
+    },
+    "button": {
+      "send_reminder_now": {
+        "name": "Send Reminder Now"
+      },
+      "mark_key_verified": {
+        "name": "Mark Key Verified"
+      }
     }
   }
 }

@@ -136,6 +136,14 @@
       "ha_version": {
         "name": "Verze HA při posledním oznámení"
       }
+    },
+    "button": {
+      "send_reminder_now": {
+        "name": "Odeslat připomínku nyní"
+      },
+      "mark_key_verified": {
+        "name": "Označit klíč jako ověřený"
+      }
     }
   }
 }
