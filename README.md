@@ -8,6 +8,8 @@
 
 A Home Assistant custom integration that reminds you to verify and safely store your backup encryption key. Never lose access to your backups again!
 
+<img width="453" height="345" alt="image" src="https://github.com/user-attachments/assets/28fbe67f-dd3b-4769-8ac3-d940d6c65a59" />
+
 ## Why This Integration?
 
 When you enable encrypted backups in Home Assistant, an encryption key is generated. **Without this key, your backups are completely useless** - you cannot restore them. Many users have learned this the hard way when they needed to restore their system but couldn't find their encryption key.
