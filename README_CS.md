@@ -8,6 +8,8 @@
 
 Vlastní integrace pro Home Assistant, která vám připomíná ověření a bezpečné uložení šifrovacího klíče zálohy. Už nikdy nepřijdete o přístup ke svým zálohám!
 
+![Ukázka oznámení](images/notification_cs.png)
+
 ## Proč tato integrace?
 
 Když povolíte šifrované zálohy v Home Assistant, vygeneruje se šifrovací klíč. **Bez tohoto klíče jsou vaše zálohy naprosto nepoužitelné** - nemůžete je obnovit. Mnoho uživatelů se o tom přesvědčilo na vlastní kůži, když potřebovali obnovit svůj systém, ale nemohli najít šifrovací klíč.
@@ -55,10 +57,47 @@ Tato integrace řeší tento problém tím, že:
   - Celkový počet oznámení
   - Verze HA při posledním oznámení
 
+- **Tlačítka:**
+  - Odeslat připomínku nyní
+  - Označit klíč jako ověřený
+
 - **Služby:**
   - `ha_backup_key_reminder.send_reminder` - Ručně odeslat připomínku
   - `ha_backup_key_reminder.reset_timer` - Resetovat časovač bez odeslání oznámení
   - `ha_backup_key_reminder.mark_key_verified` - Označit klíč jako ověřený a zrušit oznámení
+
+## Šablony zpráv
+
+### Statická (výchozí)
+> Připomínka: Zkontrolujte prosím, zda máte bezpečně uložený šifrovací klíč zálohy Home Assistant. Bez tohoto klíče nemůžete obnovit své zálohy!
+
+### Jednoduchá
+> Připomínka šifrovacího klíče: Zkontrolovali jste nedávno svůj HA šifrovací klíč? Ujistěte se, že je bezpečně uložen!
+
+### Podrobná s instrukcemi
+> **Připomínka šifrovacího klíče Home Assistant**
+>
+> Toto je přátelská připomínka k ověření vašeho šifrovacího klíče zálohy.
+>
+> **Proč je to důležité?**
+> - Bez šifrovacího klíče jsou vaše zálohy nepoužitelné
+> - Klíč je vygenerován při zapnutí šifrovaných záloh
+> - V případě ztráty jej nelze obnovit
+>
+> **Požadovaná akce:**
+> 1. Přejděte do Nastavení > Systém > Zálohy
+> 2. Stáhněte si šifrovací klíč
+> 3. Uložte jej na bezpečné místo (správce hesel, zabezpečený disk)
+>
+> Nečekejte, až budete potřebovat obnovit zálohu!
+
+### Naléhavá
+> **NALÉHAVÉ: Vyžadováno ověření šifrovacího klíče!**
+>
+> Váš šifrovací klíč zálohy Home Assistant vyžaduje okamžitou pozornost.
+> Bez tohoto klíče jsou VŠECHNY vaše šifrované zálohy NEOBNOVITELNÉ.
+>
+> Prosím ověřte NYNÍ, že máte klíč bezpečně uložen!
 
 ## Instalace
 
@@ -110,6 +149,13 @@ Integrace vytváří následující senzory:
 | `sensor.backup_key_reminder_days_until_next_reminder` | Zbývající dny do další připomínky |
 | `sensor.backup_key_reminder_notification_count` | Celkový počet odeslaných oznámení |
 | `sensor.backup_key_reminder_ha_version_at_last_notification` | Verze HA při odeslání posledního oznámení |
+
+## Tlačítka
+
+| Tlačítko | Popis |
+|----------|-------|
+| `button.backup_key_reminder_send_reminder_now` | Okamžitě odešle připomínku |
+| `button.backup_key_reminder_mark_key_verified` | Označí klíč jako ověřený a resetuje časovač |
 
 ## Služby
 
@@ -181,6 +227,9 @@ Odpověď: Ano! Můžete vybrat více způsobů oznámení a přijímat připom�
 
 **Otázka: Přistupuje tato integrace k mému šifrovacímu klíči?**
 Odpověď: Ne. Tato integrace pouze posílá připomínky. Nepřistupuje, neukládá ani nepřenáší váš šifrovací klíč zálohy.
+
+**Otázka: Jak mohu okamžitě odeslat připomínku?**
+Odpověď: Použijte tlačítko "Odeslat připomínku nyní" v zařízení integrace nebo zavolejte službu `ha_backup_key_reminder.send_reminder`.
 
 ## Podpora
 

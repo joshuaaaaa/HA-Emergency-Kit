@@ -8,7 +8,7 @@
 
 A Home Assistant custom integration that reminds you to verify and safely store your backup encryption key. Never lose access to your backups again!
 
-<img width="453" height="345" alt="image" src="https://github.com/user-attachments/assets/28fbe67f-dd3b-4769-8ac3-d940d6c65a59" />
+<img width="453" height="345" alt="Notification Example" src="https://github.com/user-attachments/assets/28fbe67f-dd3b-4769-8ac3-d940d6c65a59" />
 
 ## Why This Integration?
 
@@ -57,10 +57,47 @@ This integration solves that problem by:
   - Total notification count
   - HA version at last notification
 
+- **Buttons:**
+  - Send reminder now
+  - Mark key as verified
+
 - **Services:**
   - `ha_backup_key_reminder.send_reminder` - Manually send a reminder
   - `ha_backup_key_reminder.reset_timer` - Reset the timer without sending notification
   - `ha_backup_key_reminder.mark_key_verified` - Mark key as verified and dismiss notifications
+
+## Message Templates
+
+### Static (Default)
+> Reminder: Please verify you have your Home Assistant backup encryption key safely stored. Without this key, you cannot restore your backups!
+
+### Simple
+> Backup Key Reminder: Have you checked your HA encryption key recently? Make sure it's safely stored!
+
+### Detailed with Instructions
+> **Home Assistant Backup Key Reminder**
+>
+> This is a friendly reminder to verify your backup encryption key.
+>
+> **Why is this important?**
+> - Without the encryption key, your backups are useless
+> - The key is generated when you enable encrypted backups
+> - It cannot be recovered if lost
+>
+> **Action required:**
+> 1. Go to Settings > System > Backups
+> 2. Download your encryption key
+> 3. Store it in a safe location (password manager, secure drive)
+>
+> Don't wait until you need to restore!
+
+### Urgent
+> **URGENT: Backup Key Verification Required!**
+>
+> Your Home Assistant backup encryption key needs immediate attention.
+> Without this key, ALL your encrypted backups are IRRECOVERABLE.
+>
+> Please verify NOW that you have your key safely stored!
 
 ## Installation
 
@@ -112,6 +149,13 @@ The integration creates the following sensors:
 | `sensor.backup_key_reminder_days_until_next_reminder` | Days remaining until the next reminder |
 | `sensor.backup_key_reminder_notification_count` | Total number of notifications sent |
 | `sensor.backup_key_reminder_ha_version_at_last_notification` | HA version when last notification was sent |
+
+## Buttons
+
+| Button | Description |
+|--------|-------------|
+| `button.backup_key_reminder_send_reminder_now` | Immediately sends a reminder notification |
+| `button.backup_key_reminder_mark_key_verified` | Marks key as verified and resets timer |
 
 ## Services
 
@@ -183,6 +227,9 @@ A: Yes! You can select multiple notification methods and receive reminders throu
 
 **Q: Does this integration access my backup key?**
 A: No. This integration only sends reminders. It does not access, store, or transmit your backup encryption key.
+
+**Q: How can I send a reminder immediately?**
+A: Use the "Send Reminder Now" button in the integration device or call the `ha_backup_key_reminder.send_reminder` service.
 
 ## Support
 
