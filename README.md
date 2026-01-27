@@ -8,7 +8,8 @@
 
 A Home Assistant custom integration that reminds you to verify and safely store your backup encryption key. Never lose access to your backups again!
 
-<img width="453" height="345" alt="Notification Example" src="https://github.com/user-attachments/assets/28fbe67f-dd3b-4769-8ac3-d940d6c65a59" />
+<img width="453" height="345" alt="image" src="https://github.com/user-attachments/assets/adefe5f3-61af-4175-95c6-7d85f16550f1" />
+
 
 ## Why This Integration?
 
