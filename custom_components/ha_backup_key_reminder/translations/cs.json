@@ -1,0 +1,141 @@
+{
+  "title": "Připomínka šifrovacího klíče HA",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nastavení připomínky šifrovacího klíče",
+        "description": "Nastavte, jak často chcete být upozorněni na kontrolu šifrovacího klíče zálohy.",
+        "data": {
+          "frequency": "Frekvence připomínky",
+          "custom_days": "Vlastní interval (dny)",
+          "notify_on_update": "Upozornit při aktualizaci Home Assistant"
+        },
+        "data_description": {
+          "frequency": "Jak často chcete být upozorněni?",
+          "custom_days": "Použije se pouze při výběru 'Vlastní'",
+          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant"
+        }
+      },
+      "notifications": {
+        "title": "Způsoby oznámení",
+        "description": "Vyberte, jak chcete přijímat připomínky.",
+        "data": {
+          "notification_methods": "Způsoby oznámení"
+        },
+        "data_description": {
+          "notification_methods": "Vyberte jeden nebo více způsobů oznámení"
+        }
+      },
+      "message": {
+        "title": "Konfigurace zprávy",
+        "description": "Vyberte šablonu zprávy nebo vytvořte vlastní zprávu.",
+        "data": {
+          "message_type": "Typ zprávy",
+          "custom_message": "Vlastní zpráva"
+        },
+        "data_description": {
+          "message_type": "Vyberte předdefinovanou šablonu nebo vlastní zprávu",
+          "custom_message": "Vaše vlastní připomínková zpráva (použije se pouze při výběru 'Vlastní')"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Integrace je již nakonfigurována"
+    },
+    "abort": {
+      "already_configured": "Integrace je již nakonfigurována"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavení připomínky šifrovacího klíče",
+        "description": "Aktualizujte nastavení připomínky.",
+        "data": {
+          "frequency": "Frekvence připomínky",
+          "custom_days": "Vlastní interval (dny)",
+          "notify_on_update": "Upozornit při aktualizaci Home Assistant"
+        },
+        "data_description": {
+          "frequency": "Jak často chcete být upozorněni?",
+          "custom_days": "Použije se pouze při výběru 'Vlastní'",
+          "notify_on_update": "Odeslat připomínku při změně verze Home Assistant"
+        }
+      },
+      "notifications": {
+        "title": "Způsoby oznámení",
+        "description": "Vyberte, jak chcete přijímat připomínky.",
+        "data": {
+          "notification_methods": "Způsoby oznámení"
+        },
+        "data_description": {
+          "notification_methods": "Vyberte jeden nebo více způsobů oznámení"
+        }
+      },
+      "message": {
+        "title": "Konfigurace zprávy",
+        "description": "Vyberte šablonu zprávy nebo vytvořte vlastní zprávu.",
+        "data": {
+          "message_type": "Typ zprávy",
+          "custom_message": "Vlastní zpráva"
+        },
+        "data_description": {
+          "message_type": "Vyberte předdefinovanou šablonu nebo vlastní zprávu",
+          "custom_message": "Vaše vlastní připomínková zpráva (použije se pouze při výběru 'Vlastní')"
+        }
+      }
+    }
+  },
+  "selector": {
+    "frequency": {
+      "options": {
+        "week": "Týdně (7 dní)",
+        "month": "Měsíčně (30 dní)",
+        "half_year": "Půlročně (182 dní)",
+        "custom": "Vlastní"
+      }
+    },
+    "message_type": {
+      "options": {
+        "static": "Statická (Výchozí zpráva)",
+        "template_simple": "Šablona: Jednoduchá",
+        "template_detailed": "Šablona: Podrobná s instrukcemi",
+        "template_urgent": "Šablona: Naléhavá",
+        "custom": "Vlastní zpráva"
+      }
+    }
+  },
+  "services": {
+    "send_reminder": {
+      "name": "Odeslat připomínku",
+      "description": "Ručně odeslat připomínku šifrovacího klíče zálohy."
+    },
+    "reset_timer": {
+      "name": "Resetovat časovač",
+      "description": "Resetovat časovač připomínky bez odeslání oznámení."
+    },
+    "mark_key_verified": {
+      "name": "Označit klíč jako ověřený",
+      "description": "Označit šifrovací klíč jako ověřený a zrušit aktivní oznámení."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_notification": {
+        "name": "Poslední oznámení"
+      },
+      "next_notification": {
+        "name": "Příští oznámení"
+      },
+      "days_until_next": {
+        "name": "Dní do další připomínky"
+      },
+      "notification_count": {
+        "name": "Počet oznámení"
+      },
+      "ha_version": {
+        "name": "Verze HA při posledním oznámení"
+      }
+    }
+  }
+}

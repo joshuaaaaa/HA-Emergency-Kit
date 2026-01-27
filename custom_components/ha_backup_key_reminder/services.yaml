@@ -1,0 +1,11 @@
+send_reminder:
+  name: Send Reminder
+  description: Manually send a backup key reminder notification.
+
+reset_timer:
+  name: Reset Timer
+  description: Reset the reminder timer without sending a notification.
+
+mark_key_verified:
+  name: Mark Key Verified
+  description: Mark the encryption key as verified and dismiss any active notifications.

@@ -1,0 +1,5 @@
+{
+  "name": "HA Backup Key Reminder",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}

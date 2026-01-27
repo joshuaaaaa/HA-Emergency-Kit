@@ -1,0 +1,141 @@
+{
+  "title": "HA Backup Key Reminder",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Backup Key Reminder Setup",
+        "description": "Configure how often you want to be reminded to check your backup encryption key.",
+        "data": {
+          "frequency": "Reminder frequency",
+          "custom_days": "Custom interval (days)",
+          "notify_on_update": "Notify on Home Assistant update"
+        },
+        "data_description": {
+          "frequency": "How often should you be reminded?",
+          "custom_days": "Only used when 'Custom' frequency is selected",
+          "notify_on_update": "Send reminder when Home Assistant version changes"
+        }
+      },
+      "notifications": {
+        "title": "Notification Methods",
+        "description": "Select how you want to receive reminder notifications.",
+        "data": {
+          "notification_methods": "Notification methods"
+        },
+        "data_description": {
+          "notification_methods": "Select one or more notification methods"
+        }
+      },
+      "message": {
+        "title": "Message Configuration",
+        "description": "Choose the message template or create a custom message.",
+        "data": {
+          "message_type": "Message type",
+          "custom_message": "Custom message"
+        },
+        "data_description": {
+          "message_type": "Select a pre-defined template or custom message",
+          "custom_message": "Your custom reminder message (only used when 'Custom' is selected)"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Integration is already configured"
+    },
+    "abort": {
+      "already_configured": "Integration is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Backup Key Reminder Settings",
+        "description": "Update your reminder settings.",
+        "data": {
+          "frequency": "Reminder frequency",
+          "custom_days": "Custom interval (days)",
+          "notify_on_update": "Notify on Home Assistant update"
+        },
+        "data_description": {
+          "frequency": "How often should you be reminded?",
+          "custom_days": "Only used when 'Custom' frequency is selected",
+          "notify_on_update": "Send reminder when Home Assistant version changes"
+        }
+      },
+      "notifications": {
+        "title": "Notification Methods",
+        "description": "Select how you want to receive reminder notifications.",
+        "data": {
+          "notification_methods": "Notification methods"
+        },
+        "data_description": {
+          "notification_methods": "Select one or more notification methods"
+        }
+      },
+      "message": {
+        "title": "Message Configuration",
+        "description": "Choose the message template or create a custom message.",
+        "data": {
+          "message_type": "Message type",
+          "custom_message": "Custom message"
+        },
+        "data_description": {
+          "message_type": "Select a pre-defined template or custom message",
+          "custom_message": "Your custom reminder message (only used when 'Custom' is selected)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "frequency": {
+      "options": {
+        "week": "Weekly (7 days)",
+        "month": "Monthly (30 days)",
+        "half_year": "Half-yearly (182 days)",
+        "custom": "Custom"
+      }
+    },
+    "message_type": {
+      "options": {
+        "static": "Static (Default message)",
+        "template_simple": "Template: Simple",
+        "template_detailed": "Template: Detailed with instructions",
+        "template_urgent": "Template: Urgent",
+        "custom": "Custom message"
+      }
+    }
+  },
+  "services": {
+    "send_reminder": {
+      "name": "Send Reminder",
+      "description": "Manually send a backup key reminder notification."
+    },
+    "reset_timer": {
+      "name": "Reset Timer",
+      "description": "Reset the reminder timer without sending a notification."
+    },
+    "mark_key_verified": {
+      "name": "Mark Key Verified",
+      "description": "Mark the encryption key as verified and dismiss any active notifications."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_notification": {
+        "name": "Last Notification"
+      },
+      "next_notification": {
+        "name": "Next Notification"
+      },
+      "days_until_next": {
+        "name": "Days Until Next Reminder"
+      },
+      "notification_count": {
+        "name": "Notification Count"
+      },
+      "ha_version": {
+        "name": "HA Version at Last Notification"
+      }
+    }
+  }
+}
