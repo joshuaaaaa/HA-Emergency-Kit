@@ -48,7 +48,7 @@ class BackupKeyReminderButtonBase(ButtonEntity):
             "name": "Backup Key Reminder",
             "manufacturer": "Community",
             "model": "Backup Key Reminder",
-            "sw_version": "1.0.0",
+            "sw_version": "1.0.1",
         }
 
 
